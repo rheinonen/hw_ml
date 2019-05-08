@@ -12,20 +12,23 @@ class Field:
             self.data=args[0]
             self.dims=self.data.shape
         self.dx=kwargs.get('dx',0.1)
-
+        
+    #get data from BOUT output files
     def collect(self):
         self.data=np.squeeze(collect(self.name))
         self.dims=self.data.shape
 
+    #average over symmetry direction
     def zonal(self,ax=2):
         y=np.mean(self.data,axis=ax,keepdims=True)
         x=Field(y,dx=self.dx)
         return x;
-
+    
+    #fluctuation from zonal average
     def fluc(self,ax=2):
         return self-self.zonal()
 
-
+    #overloading binary operators for elmementwise arithmetic on fields
     def __add__(self,other):
         y=Field(np.add(self.data,other.data),dx=self.dx)
         return y;
@@ -33,7 +36,8 @@ class Field:
     def __sub__(self,other):
         y=Field(np.subtract(self.data,other.data),dx=self.dx)
         return y;
-
+    
+    #handles Field*scalar and Field*Field
     def __mul__(self,other):
         try:
             y=Field(np.multiply(self.data,other.data),dx=self.dx)
@@ -41,11 +45,13 @@ class Field:
         except:
             y=Field(np.multiply(self.data,other),dx=self.dx)
             return y;
-
+        
+    #handles scalar*Field
     def __rmul__(self,other):
             y=Field(np.multiply(self.data,other),dx=self.dx)
             return y;
-
+        
+    # discrete derivative along chosen axis
     def deriv(self,ax):
         #z=a
         #for i in range(a.shape[0]):
@@ -64,7 +70,8 @@ class Field:
         y=np.moveaxis(x,0,1)
         z=Field(y,dx=xstep*self.dx)
         return z;
-
+    
+    # returns the stddev from above coarse graining
     def stddev(self,xpoints=5,guards=2):
         nx=self.dims[1]-2*guards
         xstep=math.floor((float(nx)-1)/float(xpoints))
@@ -76,12 +83,14 @@ class Field:
     #  window average over N points along axis
     #def rolling_average(a,N,ax):
         #return np.apply_along_axis(lambda m: np.convolve(m, np.ones((N,))/N, mode='same'), axis=ax,arr=a)
-
+    
+    # remove early time data and flatten vector to prepare for nn.py
     def clean(self,tmin=10,guards=2):
         y=self.data[tmin:,:,:]
         z=y.flatten()
         return z;
-
+    
+    # mean derivative over windows in x
     def secants(self,xpoints=5,guards=2):
         nx=self.dims[1]-2*guards
         xstep=math.floor((float(nx)-1)/float(xpoints))

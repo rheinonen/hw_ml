@@ -126,13 +126,13 @@ class Field:
         return z;
 
     #returns cubic fit parameters for windows in x
-    def fit_cubic(self,xpoints=16,guards=2,tol=10e-4):
-        nx=self.dims[1]-2*guards
-        xstep=math.floor((float(nx)-1)/float(xpoints))
-        params=np.zeros(self.dims[0],xpoints,4)
-        for t in range(0,self.dims[0]):
-            for i in range(0,xpoints):
+    #def fit_cubic(self,xpoints=16,guards=2,tol=10e-4):
+     #   nx=self.dims[1]-2*guards
+      #  xstep=math.floor((float(nx)-1)/float(xpoints))
+      #  params=np.zeros(self.dims[0],xpoints,4)
+       # for t in range(0,self.dims[0]):
+        #    for i in range(0,xpoints):
                 #todo: appropriate library function for fit. probably needs parallelization as well
                 #params[t,i,:]=fit(np.squeeze(self.data[t,int(guards+i*xstep):int(guards+(i+1)*xstep),:]),tol)
-        z=Field(params,dx=xstep*self.dx)
-        return z;
+        #z=Field(params,dx=xstep*self.dx)
+        #return z;

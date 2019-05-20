@@ -25,9 +25,9 @@ dir_list=('kappa=0.75','kappa=1','kappa=1.25','kappa=1.5','kappa=1.75','kappa=2'
 for dir in dir_list:
     file=np.load(dir+'/data/cleaned_data.npz')
     newdata=np.stack((file['ens'],file['vort'],file['n_x'],file['vort_x'],file['ens_x']),axis=1)
-    neg1=np.stack((file['ens'],file['vort'],-file['n_x'],-file['vort_x'],-file['ens_x']),axis=1)
-    neg2=np.stack((file['ens'],-file['vort'],file['n_x'],file['vort_x'],-file['ens_x']),axis=1)
-    neg3=np.stack((file['ens'],-file['vort'],-file['n_x'],-file['vort_x'],file['ens_x']),axis=1)
+    neg1=np.stack((file['ens'],file['vort'],-file['n_x'],-file['vort_x'],-file['ens_x']),axis=1) #x-> -x, y-> -y
+    neg2=np.stack((file['ens'],-file['vort'],file['n_x'],file['vort_x'],-file['ens_x']),axis=1) #x-> -x, phi-> -phi, n-> -n
+    neg3=np.stack((file['ens'],-file['vort'],-file['n_x'],-file['vort_x'],file['ens_x']),axis=1) #y-> -y, phi-> -phi, n-> -n
     #print(newdata.shape)
     data=np.concatenate((data,newdata,neg1,neg2,neg3),axis=0)
     #print(data.shape)
@@ -36,27 +36,34 @@ for dir in dir_list:
     label=np.concatenate((label,newlabel,-newlabel,newlabel,-newlabel),axis=0)
 
 print(data.shape)
-#shuffle_in_unison(data,label)
-#w=-np.log(pdf(label))
-#print(np.shape(w))
 
-#train_weight=w[20001:]
-#test_weight=w[:20000]
+#these lines are for testing a trained model on an unseen data set
+
+# test_list=('kappa=1.75','kappa=2')
+# test_data=np.array([]).reshape(0,5)
+# test_label=[]
+# for dir in test_list:
+#     file=np.load(dir+'/data/cleaned_data.npz')
+#     newdata=np.stack((file['ens'],file['vort'],file['n_x'],file['vort_x'],file['ens_x']),axis=1)
+#     test_data=np.concatenate((test_data,newdata),axis=0)
+#     newlabel=file['n_flux']
+#     test_label=np.concatenate((test_label,newlabel),axis=0)
 
 #train model several times to make sure independent of training/validation partition
 n_models=10
+ntrain=2000000
 models = [Sequential() for i in range(0,n_models)]
 feat=['ens','vort','n_x','vort_x','ens_x']
 for i in range(0,n_models):
     shuffle_in_unison(data,label)
     #randomly partition data
-    train_data=data[:2000000,:]
-    test_data=data[2000001:,:]
-    train_label=label[:2000000]
-    test_label=label[2000001:]
+    train_data=data[:ntrain,:]
+    test_data=data[ntrain+1:,:]
+    train_label=label[:ntrain]
+    test_label=label[ntrain+1:]
 
     models[i].add(Dense(units=10, input_dim=5,kernel_regularizer=regularizers.l2(0.1)))
- 
+
     models[i].add(ELU(alpha=1))
     models[i].add(BatchNormalization())
     #models[i].add(Dropout(0.5))
@@ -81,4 +88,5 @@ for i in range(0,n_models):
                           verbose=1, # Print description after each epoch
                           batch_size=256, # Number of observations per batch
                           validation_data=(test_data, test_label)) # Data for evaluation
-   
+    #test=models[i].evaluate(x=test_data,y=test_label,verbose=1)
+    #print(test)

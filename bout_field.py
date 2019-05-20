@@ -109,7 +109,7 @@ class Field:
         xstep=math.floor((float(nx)-1)/float(xpoints))
         x=np.asarray([(-self.data[:,int(guards+(i+1)*xstep)+2,:]+8*self.data[:,int(guards+(i+1)*xstep)+1,:]-8*self.data[:,int(guards+(i+1)*xstep)-1,:]
             +self.data[:,int(guards+(i+1)*xstep)-2,:]+self.data[:,int(guards+i*xstep)+2,:]-8*self.data[:,int(guards+i*xstep)+1,:]
-            +8*self.data[:,int(guards+i*xstep)-1,:]-self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx)/(xstep*self.dx) for in range(0,xpoints)])
+            +8*self.data[:,int(guards+i*xstep)-1,:]-self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx)/(xstep*self.dx) for i in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
         z=Field(y,dx=xstep*self.dx)
         return z;
@@ -120,7 +120,7 @@ class Field:
         xstep=math.floor((float(nx)-1)/float(xpoints))
         x=np.asarray([(-self.data[:,int(guards+(i+1)*xstep)+2,:]+16*self.data[:,int(guards+(i+1)*xstep)+1,:]-30*self.data[:,int(guards+(i+1)*xstep),:]+16*self.data[:,int(guards+(i+1)*xstep)-1,:]
             -self.data[:,int(guards+(i+1)*xstep)-2,:]+self.data[:,int(guards+i*xstep)+2,:]-16*self.data[:,int(guards+i*xstep)+1,:]+30*self.data[:,int(guards+i*xstep),:]
-            -16*self.data[:,int(guards+i*xstep)-1,:]+self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx**2)/(xstep*self.dx) for in range(0,xpoints)])
+            -16*self.data[:,int(guards+i*xstep)-1,:]+self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx**2)/(xstep*self.dx) for i in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
         z=Field(y,dx=xstep*self.dx)
         return z;

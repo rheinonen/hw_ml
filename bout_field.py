@@ -85,9 +85,11 @@ class Field:
         #return np.apply_along_axis(lambda m: np.convolve(m, np.ones((N,))/N, mode='same'), axis=ax,arr=a)
 
     # remove early time data and flatten vector to prepare for nn.py
-    def clean(self,tmin=10,guards=2):
+    def clean(self,tmin=10,guards=2,flatten=True):
         y=self.data[tmin:,:,:]
-        z=y.flatten()
+        y=np.squeeze(y)
+        if(flatten=True):
+            z=y.flatten()
         return z;
 
     # mean derivative over windows in x
@@ -109,7 +111,7 @@ class Field:
         xstep=math.floor((float(nx)-1)/float(xpoints))
         x=np.asarray([(-self.data[:,int(guards+(i+1)*xstep)+2,:]+8*self.data[:,int(guards+(i+1)*xstep)+1,:]-8*self.data[:,int(guards+(i+1)*xstep)-1,:]
             +self.data[:,int(guards+(i+1)*xstep)-2,:]+self.data[:,int(guards+i*xstep)+2,:]-8*self.data[:,int(guards+i*xstep)+1,:]
-            +8*self.data[:,int(guards+i*xstep)-1,:]-self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx)/(xstep*self.dx) for i in range(0,xpoints)])
+            +8*self.data[:,int(guards+i*xstep)-1,:]-self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx)/(xstep*self.dx) for in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
         z=Field(y,dx=xstep*self.dx)
         return z;
@@ -120,19 +122,19 @@ class Field:
         xstep=math.floor((float(nx)-1)/float(xpoints))
         x=np.asarray([(-self.data[:,int(guards+(i+1)*xstep)+2,:]+16*self.data[:,int(guards+(i+1)*xstep)+1,:]-30*self.data[:,int(guards+(i+1)*xstep),:]+16*self.data[:,int(guards+(i+1)*xstep)-1,:]
             -self.data[:,int(guards+(i+1)*xstep)-2,:]+self.data[:,int(guards+i*xstep)+2,:]-16*self.data[:,int(guards+i*xstep)+1,:]+30*self.data[:,int(guards+i*xstep),:]
-            -16*self.data[:,int(guards+i*xstep)-1,:]+self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx**2)/(xstep*self.dx) for i in range(0,xpoints)])
+            -16*self.data[:,int(guards+i*xstep)-1,:]+self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx**2)/(xstep*self.dx) for in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
         z=Field(y,dx=xstep*self.dx)
         return z;
 
     #returns cubic fit parameters for windows in x
-    #def fit_cubic(self,xpoints=16,guards=2,tol=10e-4):
-     #   nx=self.dims[1]-2*guards
-      #  xstep=math.floor((float(nx)-1)/float(xpoints))
-      #  params=np.zeros(self.dims[0],xpoints,4)
-       # for t in range(0,self.dims[0]):
-        #    for i in range(0,xpoints):
+    def fit_cubic(self,xpoints=16,guards=2,tol=10e-4):
+        nx=self.dims[1]-2*guards
+        xstep=math.floor((float(nx)-1)/float(xpoints))
+        params=np.zeros(self.dims[0],xpoints,4)
+        for t in range(0,self.dims[0]):
+            for i in range(0,xpoints):
                 #todo: appropriate library function for fit. probably needs parallelization as well
                 #params[t,i,:]=fit(np.squeeze(self.data[t,int(guards+i*xstep):int(guards+(i+1)*xstep),:]),tol)
-        #z=Field(params,dx=xstep*self.dx)
-        #return z;
+        z=Field(params,dx=xstep*self.dx)
+        return z;

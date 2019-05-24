@@ -85,10 +85,12 @@ class Field:
         #return np.apply_along_axis(lambda m: np.convolve(m, np.ones((N,))/N, mode='same'), axis=ax,arr=a)
 
     # remove early time data and flatten vector to prepare for nn.py
-    def clean(self,tmin=10,guards=2,flatten=True):
-        y=self.data[tmin:,:,:]
-        y=np.squeeze(y)
-        if(flatten==True):
+    def clean(self,tmin=10,guards=2,full_x=False):
+        if(full_x==True):
+            y=self.data[tmin:,guards:-guards,:]
+            y=np.squeeze(y)
+        else:
+            y=self.data[tmin:,:,:]
             y=y.flatten()
         return y;
 

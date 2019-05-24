@@ -89,7 +89,7 @@ class Field:
         y=self.data[tmin:,:,:]
         y=np.squeeze(y)
         if(flatten==True):
-            z=y.flatten()
+            y=y.flatten()
         return z;
 
     # mean derivative over windows in x

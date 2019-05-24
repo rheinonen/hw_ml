@@ -88,7 +88,7 @@ class Field:
     def clean(self,tmin=10,guards=2,flatten=True):
         y=self.data[tmin:,:,:]
         y=np.squeeze(y)
-        if(flatten=True):
+        if(flatten==True):
             z=y.flatten()
         return z;
 

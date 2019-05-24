@@ -90,7 +90,7 @@ class Field:
         y=np.squeeze(y)
         if(flatten==True):
             y=y.flatten()
-        return z;
+        return y;
 
     # mean derivative over windows in x
     def secants(self,xpoints=16,guards=2):

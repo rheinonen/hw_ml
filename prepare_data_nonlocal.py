@@ -60,12 +60,12 @@ bg=np.repeat(bg[np.newaxis,:,np.newaxis],trange,axis=0)
 n_zonal.data=np.add(n_zonal.data,bg)
 
 tmin=25
-n=n_zonal.clean(tmin,flatten=False)
-vort=vort_zonal.clean(tmin,flatten=False)
-ens=ens_zonal.clean(tmin,flatten=False)
-ens_flux=ens_flux.clean(tmin,flatten=False)
-n_flux=n_flux.clean(tmin,flatten=False)
-vort_flux=vort_flux.clean(tmin,flatten=False)
+n=n_zonal.clean(tmin,full_x=True)
+vort=vort_zonal.clean(tmin,full_x=True)
+ens=ens_zonal.clean(tmin,full_x=True)
+ens_flux=ens_flux.clean(tmin,full_x=True)
+n_flux=n_flux.clean(tmin,full_x=True)
+vort_flux=vort_flux.clean(tmin,full_x=True)
 
 print(n.size)
 print(vort.size)

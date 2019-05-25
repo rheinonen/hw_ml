@@ -28,7 +28,7 @@ for dir in dir_list:
     #print(data.shape)
     newlabel=file['n_flux']
     #print(newlabel.shape)
-    label=np.concatenate((label,-np.flip(newlabel,axis=1),np.flip(newlabel,axis=1),np.flip(newlabel,axis=1),-newlabel),axis=0)
+    label=np.concatenate((label,-np.fliplr(newlabel),np.fliplr(newlabel),np.fliplr(newlabel),-newlabel),axis=0)
 
 print(data.shape)
 

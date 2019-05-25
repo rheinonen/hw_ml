@@ -20,8 +20,8 @@ dir_list=('kappa=0.75','kappa=1','kappa=1.25','kappa=1.5','kappa=1.75','kappa=2'
 for dir in dir_list:
     file=np.load(dir+'/data/cleaned_data_nonlocal.npz')
     newdata=np.stack((file['n'],file['vort'],file['ens']),axis=2)
-    neg1=np.stack((np.flip(file['n'],axis=1),np.flip(file['vort'],axis=1),np.flip(file['ens'],axis=1)),axis=2) #x-> -x, y-> -y
-    neg2=np.stack(-(np.flip(file['n'],axis=1),-np.flip(file['vort'],axis=1),np.flip(file['ens'],axis=1)),axis=2) #x-> -x, phi-> -phi, n-> -n
+    neg1=np.stack((np.fliplr(file['n']),np.fliplr(file['vort']),np.fliplr(file['ens'])),axis=2) #x-> -x, y-> -y
+    neg2=np.stack(-(np.fliplr(file['n']),-np.fliplr(file['vort']),np.fliplr(file['ens'])),axis=2) #x-> -x, phi-> -phi, n-> -n
     neg3=np.stack(-(file['n'],-file['vort'],file['ens']),axis=2) #y-> -y, phi-> -phi, n-> -n
     #print(newdata.shape)
     data=np.concatenate((data,newdata,neg1,neg2,neg3),axis=0)

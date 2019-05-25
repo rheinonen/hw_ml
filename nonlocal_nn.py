@@ -1,6 +1,6 @@
 import numpy as np
 from keras.models import Sequential
-from keras.layers import Dense,GRU,Bidrectional,TimeDistributed
+from keras.layers import Dense,GRU,Bidirectional,TimeDistributed
 from keras import losses
 from keras.layers.advanced_activations import ELU
 from keras.layers.normalization import BatchNormalization

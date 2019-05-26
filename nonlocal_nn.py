@@ -26,9 +26,9 @@ for dir in dir_list:
     #print(newdata.shape)
     data=np.concatenate((data,newdata,neg1,neg2,neg3),axis=0)
     #print(data.shape)
-    newlabel=np.expand_dims(file['n_flux'],axis=1)
+    newlabel=np.expand_dims(file['n_flux'],axis=2)
     #print(newlabel.shape)
-    label=np.concatenate((label,-np.flipud(newlabel),np.flipud(newlabel),np.flipud(newlabel),-newlabel),axis=0)
+    label=np.concatenate((label,-newlabel[:,::-1,:],newlabel[:,::-1,:],newlabel[:,::-1,:],-newlabel),axis=0)
 
 print(data.shape)
 

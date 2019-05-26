@@ -23,8 +23,8 @@ for dir in dir_list:
     vort=file['vort']
     ens=file['ens']
     newdata=np.stack((n,vort,ens),axis=2)
-    neg1=np.stack((n[:,::-1,:],vort[:,::-1,:],ens[:,::-1,:]),axis=2) #x-> -x, y-> -y
-    neg2=np.stack((-n[:,::-1,:],-vort[:,::-1,:],ens[:,::-1,:]),axis=2) #x-> -x, phi-> -phi, n-> -n
+    neg1=np.stack((n[:,::-1],vort[:,::-1],ens[:,::-1]),axis=2) #x-> -x, y-> -y
+    neg2=np.stack((-n[:,::-1],-vort[:,::-1],ens[:,::-1]),axis=2) #x-> -x, phi-> -phi, n-> -n
     neg3=np.stack((-n,-vort,ens),axis=2) #y-> -y, phi-> -phi, n-> -n
     #print(newdata.shape)
     data=np.concatenate((data,newdata,neg1,neg2,neg3),axis=0)

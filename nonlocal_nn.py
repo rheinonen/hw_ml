@@ -49,7 +49,7 @@ train_label=label[:ntrain]
 val_label=label[ntrain+1:]
 
 model.add(Bidirectional(GRU(512,return_sequences=True,dropout=0,recurrent_dropout=0),input_shape=(512,3),merge_mode='ave'))
-model.add(TimeDistributed(Dense(512)))
+model.add(TimeDistributed(Dense(1)))
 model.compile(loss='mean_squared_error', optimizer='adam')
 callbacks = [EarlyStopping(monitor='val_loss', patience=10),
              ModelCheckpoint(filepath='n_nonlocal.h5', monitor='val_loss', save_best_only=True)]

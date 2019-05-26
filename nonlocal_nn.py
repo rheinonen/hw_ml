@@ -19,10 +19,13 @@ label=np.array([]).reshape(0,512,1)
 dir_list=('kappa=0.75','kappa=1','kappa=1.25','kappa=1.5','kappa=1.75','kappa=2','kappa=2.25','kappa=2.5','kappa=2.75','kappa=3','beta=1','beta=1.5','beta=2','beta=2.5','beta=3','beta=4','beta=5','beta=6','beta=7','beta=8','beta=9','beta=10')#,'q=10','q=15','q=20','q=25','q=30')
 for dir in dir_list:
     file=np.load(dir+'/data/cleaned_data_nonlocal.npz')
-    newdata=np.stack((file['n'],file['vort'],file['ens']),axis=2)
-    neg1=np.stack((np.flipud(file['n']),np.flipud(file['vort']),np.flipud(file['ens'])),axis=2) #x-> -x, y-> -y
-    neg2=np.stack((-np.flipud(file['n']),-np.flipud(file['vort']),np.flipud(file['ens'])),axis=2) #x-> -x, phi-> -phi, n-> -n
-    neg3=np.stack((-file['n'],-file['vort'],file['ens']),axis=2) #y-> -y, phi-> -phi, n-> -n
+    n=file['n']
+    vort=file['vort']
+    ens=file['ens']
+    newdata=np.stack((n,vort,ens),axis=2)
+    neg1=np.stack((n[:,::-1,:],vort[:,::-1,:],ens[:,::-1,:]),axis=2) #x-> -x, y-> -y
+    neg2=np.stack((-n[:,::-1,:],-vort[:,::-1,:],ens[:,::-1,:]),axis=2) #x-> -x, phi-> -phi, n-> -n
+    neg3=np.stack((-n,-vort,ens),axis=2) #y-> -y, phi-> -phi, n-> -n
     #print(newdata.shape)
     data=np.concatenate((data,newdata,neg1,neg2,neg3),axis=0)
     #print(data.shape)

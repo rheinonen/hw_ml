@@ -20,15 +20,15 @@ dir_list=('kappa=0.75','kappa=1','kappa=1.25','kappa=1.5','kappa=1.75','kappa=2'
 for dir in dir_list:
     file=np.load(dir+'/data/cleaned_data_nonlocal.npz')
     newdata=np.stack((file['n'],file['vort'],file['ens']),axis=2)
-    neg1=np.stack((np.fliplr(file['n']),np.fliplr(file['vort']),np.fliplr(file['ens'])),axis=2) #x-> -x, y-> -y
-    neg2=np.stack((-np.fliplr(file['n']),-np.fliplr(file['vort']),np.fliplr(file['ens'])),axis=2) #x-> -x, phi-> -phi, n-> -n
+    neg1=np.stack((np.flipud(file['n']),np.flipud(file['vort']),np.flipud(file['ens'])),axis=2) #x-> -x, y-> -y
+    neg2=np.stack((-np.flipud(file['n']),-np.flipud(file['vort']),np.flipud(file['ens'])),axis=2) #x-> -x, phi-> -phi, n-> -n
     neg3=np.stack((-file['n'],-file['vort'],file['ens']),axis=2) #y-> -y, phi-> -phi, n-> -n
     #print(newdata.shape)
     data=np.concatenate((data,newdata,neg1,neg2,neg3),axis=0)
     #print(data.shape)
     newlabel=np.expand_dims(file['n_flux'],axis=1)
     #print(newlabel.shape)
-    label=np.concatenate((label,-np.fliplr(newlabel),np.fliplr(newlabel),np.fliplr(newlabel),-newlabel),axis=0)
+    label=np.concatenate((label,-np.flipud(newlabel),np.flipud(newlabel),np.flipud(newlabel),-newlabel),axis=0)
 
 print(data.shape)
 

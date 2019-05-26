@@ -45,7 +45,7 @@ val_data=data[ntrain+1:,:]
 train_label=label[:ntrain]
 val_label=label[ntrain+1:]
 
-model.add(Bidirectional(GRU(512,input_shape=(512,3),return_sequences=True,dropout=0,recurrent_dropout=0),merge_mode='ave'))
+model.add(Bidirectional(GRU(512,return_sequences=True,dropout=0,recurrent_dropout=0),input_shape=(512,3),merge_mode='ave'))
 model.add(TimeDistributed(Dense(512)))
 model.compile(loss='mean_squared_error', optimizer='adam')
 callbacks = [EarlyStopping(monitor='val_loss', patience=10),

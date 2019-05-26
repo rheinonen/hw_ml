@@ -15,7 +15,7 @@ def shuffle_in_unison(a, b):
     np.random.shuffle(b)
 
 data=np.array([]).reshape(0,512,3)
-label=np.array([]).reshape(0,512)
+label=np.array([]).reshape(0,512,1)
 dir_list=('kappa=0.75','kappa=1','kappa=1.25','kappa=1.5','kappa=1.75','kappa=2','kappa=2.25','kappa=2.5','kappa=2.75','kappa=3','beta=1','beta=1.5','beta=2','beta=2.5','beta=3','beta=4','beta=5','beta=6','beta=7','beta=8','beta=9','beta=10')#,'q=10','q=15','q=20','q=25','q=30')
 for dir in dir_list:
     file=np.load(dir+'/data/cleaned_data_nonlocal.npz')
@@ -26,7 +26,7 @@ for dir in dir_list:
     #print(newdata.shape)
     data=np.concatenate((data,newdata,neg1,neg2,neg3),axis=0)
     #print(data.shape)
-    newlabel=file['n_flux']
+    newlabel=np.expand_dims(file['n_flux'],axis=1)
     #print(newlabel.shape)
     label=np.concatenate((label,-np.fliplr(newlabel),np.fliplr(newlabel),np.fliplr(newlabel),-newlabel),axis=0)
 

@@ -41,7 +41,6 @@ for n0 in (-15,-10, -5, 5,10,15):
     temp[:,:,0]+=n0
     data=np.concatenate((data,temp),axis=0)
     label=np.concatenate((label,oldlabel),axis=0)
-end
 
 print(data.shape)
 

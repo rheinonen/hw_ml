@@ -32,6 +32,14 @@ for dir in dir_list:
     newlabel=np.expand_dims(file['n_flux'],axis=2)
     #print(newlabel.shape)
     label=np.concatenate((label,-newlabel[:,::-1,:],newlabel[:,::-1,:],newlabel[:,::-1,:],-newlabel),axis=0)
+    
+olddata=data
+# ensure symmetry under n-> n+n0    
+for n0 in (-15,-10, -5, 5,10,15):
+    temp=olddata
+    temp[:,:,0]+=n0
+    data=np.concatenate((data,temp),axis=0)
+end
 
 print(data.shape)
 
@@ -39,7 +47,7 @@ model=Sequential()
 
 feat=['n','vort','ens']
 
-ntrain=140000
+ntrain=int(0.8*data.shape[0])
 
 #randomly partition data
 shuffle_in_unison(data,label)
@@ -48,7 +56,7 @@ val_data=data[ntrain+1:,:]
 train_label=label[:ntrain]
 val_label=label[ntrain+1:]
 
-model.add(Bidirectional(GRU(512,return_sequences=True,dropout=0,recurrent_dropout=0),input_shape=(512,3),merge_mode='ave'))
+model.add(Bidirectional(GRU(512,return_sequences=True,dropout=0,recurrent_dropout=0),input_shape=(512,3),merge_mode='concat'))
 model.add(TimeDistributed(Dense(1)))
 model.compile(loss='mean_squared_error', optimizer='adam')
 callbacks = [EarlyStopping(monitor='val_loss', patience=10),

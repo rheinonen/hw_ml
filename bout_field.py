@@ -87,7 +87,10 @@ class Field:
     # remove early time data and flatten vector to prepare for nn.py
     def clean(self,tmin=10,guards=2,full_x=False):
         if(full_x==True):
-            y=self.data[tmin:,guards:-guards,:]
+            if(guards==0):
+                y=self.data[tmin:,:,:]
+            else:
+                y=self.data[tmin:,guards:-guards,:]
             y=np.squeeze(y)
         else:
             y=self.data[tmin:,:,:]

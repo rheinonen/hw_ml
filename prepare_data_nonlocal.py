@@ -30,16 +30,20 @@ del vort
 
 q_fluc=n_fluc-vort_fluc
 
-del n_fluc
-
 ens_zonal=0.5*(q_fluc**2).zonal()
-del q_fluc
+
 vx=phi_fluc.deriv(2)
 del phi_fluc
+
 ens_flux=0.5*((q_fluc**2)*vx).zonal()
+del q_fluc
+
 n_flux=(n_fluc*vx).zonal()
+del n_fluc
+
 vort_flux=(vort_fluc*vx).zonal()
 del vort_fluc
+
 #build array corresponding to x points
 x=[i for i in range(0,516)]
 x=np.divide(x,515.)
@@ -56,12 +60,12 @@ bg=np.repeat(bg[np.newaxis,:,np.newaxis],trange,axis=0)
 n_zonal.data=np.add(n_zonal.data,bg)
 
 tmin=25
-n=n_zonal.clean(tmin,flatten=False)
-vort=vort_zonal.clean(tmin,flatten=False)
-ens=ens_zonal.clean(tmin,flatten=False)
-ens_flux=ens_flux.clean(tmin,flatten=False)
-n_flux=n_flux.clean(tmin,flatten=False)
-vort_flux=vort_flux.clean(tmin,flatten=False)
+n=n_zonal.clean(tmin,full_x=True)
+vort=vort_zonal.clean(tmin,full_x=True)
+ens=ens_zonal.clean(tmin,full_x=True)
+ens_flux=ens_flux.clean(tmin,full_x=True)
+n_flux=n_flux.clean(tmin,full_x=True)
+vort_flux=vort_flux.clean(tmin,full_x=True)
 
 print(n.size)
 print(vort.size)

@@ -89,7 +89,9 @@ n_x=n_zonal.secants(xpoints)
 n_x=n_x.clean(tmin)
 print(n_x.size)
 
+n_xx=n_zonal.mean_d2(xpoints).clean(tmin)
+
 #phi_x=phi_zonal.secants(xpoints).clean()
 
 #save the data
-np.savez('cleaned_data_vort.npz',vort_flux=vort_flux,ens=ens,vort=vort,n_x=n_x,vort_x=vort_x,vort_xx=vort_xx,vort_xxx=vort_xxx)
+np.savez('cleaned_data_vort.npz',vort_flux=vort_flux,n_xx=n_xx,ens=ens,vort=vort,n_x=n_x,vort_x=vort_x,vort_xx=vort_xx,vort_xxx=vort_xxx)

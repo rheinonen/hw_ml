@@ -1,5 +1,6 @@
 from boutdata.collect import collect
 from boututils import calculus as calc
+from matplotlib import pyplot as plt
 import math
 import numpy as np
 
@@ -57,8 +58,12 @@ class Field:
         #for i in range(a.shape[0]):
             #z[i,:,:]=calc.deriv2D(np.squeeze(a[i,:,:]),axis=ax,dx=dx,noise_suppression=false)
         #return z
-        x=np.subtract(np.roll(self.data,-1,axis=ax),self.data)/self.dx
-        y=Field(x,dx=self.dx)
+        if(ax=2):
+            x=np.subtract(np.roll(self.data,-1,axis=ax),self.data)/self.dx
+            y=Field(x,dx=self.dx)
+        else:
+            x=np.gradient(self.data,self.dx,axis=ax,edge_order=2)
+            y=Field(x,dx=self.dx)
         return y;
 
     # returns a version of data averaged over xpoints rectangular regions in x
@@ -131,7 +136,15 @@ class Field:
         y=np.moveaxis(x,0,1)
         z=Field(y,dx=xstep*self.dx)
         return z;
-
+    
+#plots 2d colormap f(x,t)  
+    def colormap(self):
+        plt.imshow(args[i].data[:,:,0])
+        plt.colorbar()
+        plt.xlabel('n_x')
+        plt.ylabel('n_t')
+        plt.show()
+    
     #returns cubic fit parameters for windows in x
     #def fit_cubic(self,xpoints=16,guards=2,tol=10e-4):
      #   nx=self.dims[1]-2*guards
@@ -143,3 +156,5 @@ class Field:
                 #params[t,i,:]=fit(np.squeeze(self.data[t,int(guards+i*xstep):int(guards+(i+1)*xstep),:]),tol)
         #z=Field(params,dx=xstep*self.dx)
         #return z;
+        
+       

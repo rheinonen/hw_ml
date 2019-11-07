@@ -58,7 +58,7 @@ class Field:
         #for i in range(a.shape[0]):
             #z[i,:,:]=calc.deriv2D(np.squeeze(a[i,:,:]),axis=ax,dx=dx,noise_suppression=false)
         #return z
-        if(ax=2):
+        if(ax==2):
             x=np.subtract(np.roll(self.data,-1,axis=ax),self.data)/self.dx
             y=Field(x,dx=self.dx)
         else:

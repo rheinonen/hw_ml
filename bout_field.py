@@ -67,7 +67,7 @@ class Field:
             y=Field(x,dx=self.dx,dt=self.dt)
         else:
             x=np.gradient(self.data,self.dx,axis=ax,edge_order=2)
-            y=Field(x,dx=self.dx,self.dt)
+            y=Field(x,dx=self.dx,dt=self.dt)
         return y;
 
     # returns a version of data averaged over xpoints rectangular regions in x

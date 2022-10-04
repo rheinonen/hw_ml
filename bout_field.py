@@ -141,12 +141,13 @@ class Field:
         return z;
     
 #plots 2d colormap f(x,t)  
-    def colormap(self):
-        plt.imshow(args[i].data[:,:,0])
+    def save_hovmuller(self,file):
+        plt.imshow(self.data[:,:,0],extent=(0,self.data[1]*self.dx,0,self.data[0]*self.dt))
         plt.colorbar()
-        plt.xlabel('n_x')
-        plt.ylabel('n_t')
-        plt.show()
+        plt.xlabel('x')
+        plt.ylabel('t')
+        plt.savefig(file)
+        plt.close()
     
     #returns cubic fit parameters for windows in x
     #def fit_cubic(self,xpoints=16,guards=2,tol=10e-4):

@@ -13,6 +13,7 @@ class Field:
             self.data=args[0]
             self.dims=self.data.shape
         self.dx=kwargs.get('dx',0.1)
+        self.dt=kwargs.get('dt',None)
 
     #get data from BOUT output files
     def collect(self):
@@ -22,7 +23,7 @@ class Field:
     #average over symmetry direction
     def zonal(self,ax=2):
         y=np.mean(self.data,axis=ax,keepdims=True)
-        x=Field(y,dx=self.dx)
+        x=Field(y,dx=self.dx,dt=self.dt)
         return x;
 
     #fluctuation from zonal average
@@ -31,25 +32,25 @@ class Field:
 
     #overloading binary operators for elmementwise arithmetic on fields
     def __add__(self,other):
-        y=Field(np.add(self.data,other.data),dx=self.dx)
+        y=Field(np.add(self.data,other.data),dx=self.dx,dt=self.dt)
         return y;
 
     def __sub__(self,other):
-        y=Field(np.subtract(self.data,other.data),dx=self.dx)
+        y=Field(np.subtract(self.data,other.data),dx=self.dx,dt=self.dt)
         return y;
 
     #handles Field*scalar and Field*Field
     def __mul__(self,other):
         try:
-            y=Field(np.multiply(self.data,other.data),dx=self.dx)
+            y=Field(np.multiply(self.data,other.data),dx=self.dx,dt=self.dt)
             return y;
         except:
-            y=Field(np.multiply(self.data,other),dx=self.dx)
+            y=Field(np.multiply(self.data,other),dx=self.dx,dt=self.dt)
             return y;
 
     #handles scalar*Field
     def __rmul__(self,other):
-            y=Field(np.multiply(self.data,other),dx=self.dx)
+            y=Field(np.multiply(self.data,other),dx=self.dx,dt=self.dt)
             return y;
 
     # discrete derivative along chosen axis
@@ -60,10 +61,13 @@ class Field:
         #return z
         if(ax==2):
             x=np.subtract(np.roll(self.data,-1,axis=ax),self.data)/self.dx
-            y=Field(x,dx=self.dx)
+            y=Field(x,dx=self.dx,dt=self.dt)
+        elif ax==0:
+            x=np.gradient(self.data,self.dt,axis=ax,edge_order=2)
+            y=Field(x,dx=self.dx,dt=self.dt
         else:
             x=np.gradient(self.data,self.dx,axis=ax,edge_order=2)
-            y=Field(x,dx=self.dx)
+            y=Field(x,dx=self.dx,self.dt)
         return y;
 
     # returns a version of data averaged over xpoints rectangular regions in x
@@ -73,7 +77,7 @@ class Field:
         xstep=math.floor((float(nx)-1)/float(xpoints))
         x=np.asarray([np.mean(self.data[:,int(guards+i*xstep):int(guards+(i+1)*xstep),:],axis=1) for i in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
-        z=Field(y,dx=xstep*self.dx)
+        z=Field(y,dx=xstep*self.dx,dt=self.dt)
         return z;
 
     # returns the stddev from above coarse graining
@@ -82,7 +86,7 @@ class Field:
         xstep=math.floor((float(nx)-1)/float(xpoints))
         x=np.asarray([np.std(self.data[:,int(guards+i*xstep):int(guards+(i+1)*xstep),:],axis=1) for i in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
-        z=Field(y,dx=xstep*self.dx)
+        z=Field(y,dx=xstep*self.dx,dt=self.dt)
         return z;
 
     #  window average over N points along axis
@@ -101,6 +105,7 @@ class Field:
             y=self.data[tmin:,:,:]
             y=y.flatten()
         return y;
+    
 
     # mean derivative over windows in x
     def secants(self,xpoints=16,guards=2):
@@ -108,7 +113,7 @@ class Field:
         xstep=math.floor((float(nx)-1)/float(xpoints))
         x=np.asarray([np.subtract(self.data[:,int(guards+(i+1)*xstep),:],self.data[:,int(guards+i*xstep),:])/(self.dx*xstep) for i in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
-        z=Field(y,dx=xstep*self.dx)
+        z=Field(y,dx=xstep*self.dx,dt=self.dt)
         return z;
 
     def __pow__(self,other):
@@ -121,7 +126,7 @@ class Field:
         xstep=math.floor((float(nx)-1)/float(xpoints))
         x=np.asarray([(self.data[:,int(guards+(i+1)*xstep),:]-self.data[:,int(guards+(i+1)*xstep)-1,:]-self.data[:,int(guards+i*xstep+1),:]+self.data[:,int(guards+i*xstep),:])/(self.dx*self.dx) for i in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
-        z=Field(y,dx=xstep*self.dx)
+        z=Field(y,dx=xstep*self.dx,dt=self.dt)
         return z;
 
     # mean third derivative using 5 point method
@@ -132,7 +137,7 @@ class Field:
             -self.data[:,int(guards+(i+1)*xstep)-2,:]+self.data[:,int(guards+i*xstep)+2,:]-16*self.data[:,int(guards+i*xstep)+1,:]+30*self.data[:,int(guards+i*xstep),:]
             -16*self.data[:,int(guards+i*xstep)-1,:]+self.data[:,int(guards+i*xstep)-2,:])/(12*self.dx**2)/(xstep*self.dx) for i in range(0,xpoints)])
         y=np.moveaxis(x,0,1)
-        z=Field(y,dx=xstep*self.dx)
+        z=Field(y,dx=xstep*self.dx,dt=self.dt)
         return z;
     
 #plots 2d colormap f(x,t)  

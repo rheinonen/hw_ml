@@ -64,7 +64,7 @@ class Field:
             y=Field(x,dx=self.dx,dt=self.dt)
         elif ax==0:
             x=np.gradient(self.data,self.dt,axis=ax,edge_order=2)
-            y=Field(x,dx=self.dx,dt=self.dt
+            y=Field(x,dx=self.dx,dt=self.dt)
         else:
             x=np.gradient(self.data,self.dx,axis=ax,edge_order=2)
             y=Field(x,dx=self.dx,self.dt)
